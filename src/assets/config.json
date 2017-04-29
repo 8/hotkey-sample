@@ -1,0 +1,8 @@
+{
+  "hotkeys": {
+    "left": [ "MainComponent.MoveLeft" ],
+    "right": [ "MainComponent.MoveRight" ],
+    "ctrl+left": [ "AppComponent.Back", "MainComponent.MoveLeft" ],
+    "ctrl+right": [ "AppComponent.Forward", "MainComponent.MoveRight" ]
+  }
+}

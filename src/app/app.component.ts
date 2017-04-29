@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { CommandService, Command } from './command.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-root',
@@ -8,26 +9,20 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 })
 export class AppComponent implements OnDestroy {
   title = 'app works!';
-  hotkeyCtrlLeft: Hotkey | Hotkey[];
-  hotkeyCtrlRight: Hotkey | Hotkey[];
+  subscription: Subscription;
 
-  constructor(private hotkeysService: HotkeysService) {
-    this.hotkeyCtrlLeft = hotkeysService.add(new Hotkey('ctrl+left', this.ctrlLeftPressed));
-    this.hotkeyCtrlRight = hotkeysService.add(new Hotkey('ctrl+right', this.ctrlRightPressed));
-  }
-
-  ctrlLeftPressed = (event: KeyboardEvent, combo: string): boolean => {
-    this.title = 'ctrl+left pressed';
-    return true;
-  }
-
-  ctrlRightPressed = (event: KeyboardEvent, combo: string): boolean => {
-    this.title = 'ctrl+right pressed';
-    return true;
+  constructor(private commandService: CommandService) {
+    this.subscription = commandService.commands.subscribe(this.handleCommand);
   }
 
   ngOnDestroy() {
-    this.hotkeysService.remove(this.hotkeyCtrlLeft);
-    this.hotkeysService.remove(this.hotkeyCtrlRight);
+    this.subscription.unsubscribe();
+  }
+
+  handleCommand = (command: Command) => {
+    switch (command.name) {
+      case 'AppComponent.Back': this.title = 'back!'; break;
+      case 'AppComponent.Forward': this.title = 'forward!'; break;
+    }
   }
 }
